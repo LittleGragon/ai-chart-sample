@@ -1,88 +1,118 @@
-# AI Chat Sample with WebLLM
+# WebLLM AI Chat Sample
 
-这是一个使用 [@mlc-ai/web-llm](https://www.npmjs.com/package/@mlc-ai/web-llm) 构建的简单 AI 聊天示例。
+一个基于 WebLLM 的高性能浏览器内 AI 聊天应用，支持多种开源大语言模型。
 
-## 功能
+## 🌟 功能特点
 
-- 在浏览器中直接运行大型语言模型
-- 无需服务器支持
-- 使用 WebGPU 加速推理
-- 简单的聊天界面
+- **纯浏览器运行**：无需服务器，完全在浏览器内运行
+- **WebGPU 加速**：利用 GPU 硬件加速，提供快速推理
+- **隐私保护**：所有数据本地处理，不上传任何信息
+- **多模型支持**：支持 Llama、DeepSeek、Phi、Hermes 等多种模型
+- **中文界面**：完整的中文界面和提示
+- **实时对话**：支持流式输出，实时对话体验
 
-## 运行项目
+## 🚀 快速开始
 
-1. 安装依赖：
-   ```
-   npm install
-   ```
+### 1. 启动应用
 
-2. 启动开发服务器：
-   ```
-   npm start
-   ```
+```bash
+# 使用 Python 启动本地服务器
+python3 -m http.server 8000
 
-3. 在浏览器中打开 `http://localhost:8000` 访问应用
+# 或使用 Node.js
+npx serve .
+```
 
-## 使用说明
+### 2. 访问应用
 
-1. 首次运行时，应用会自动下载并加载模型（大约需要几十秒到几分钟，取决于网络速度）
-2. 模型加载完成后，你可以在输入框中输入消息与 AI 进行对话
-3. AI 的回复会显示在聊天界面中
+打开浏览器访问：http://localhost:8000
 
-## 技术细节
+### 3. 使用步骤
 
-- 使用 Llama-3.2-1B-Instruct 模型，这是一个较小的模型，加载速度相对较快且更加稳定
-- 通过 WebLLM 实现浏览器内推理，无需服务器支持
-- 支持流式响应（当前版本为完整响应，可进一步优化）
+1. **选择模型**：从下拉菜单选择合适的模型
+2. **加载模型**：点击"加载模型"按钮
+3. **等待初始化**：首次加载需要下载模型权重
+4. **开始对话**：输入消息并开始与 AI 对话
 
-## 文件结构
+## 📊 支持的模型
 
-- `index.html`: 聊天界面
-- `app.js`: 应用逻辑
-- `package.json`: 项目依赖和脚本
+### Llama 系列
+- **Llama-3.2-1B**：轻量级，适合低配置设备
+- **Llama-3.2-3B**：平衡性能与资源占用
+- **Llama-3.1-8B**：高性能，推荐日常使用
 
-## 注意事项
+### DeepSeek-R1 系列
+- **DeepSeek-R1-Distill-Qwen-7B**：专注推理能力
+- **DeepSeek-R1-Distill-Llama-8B**：Llama 版本推理模型
 
-- 需要支持 WebGPU 的浏览器（如最新版 Chrome）
-- 首次加载模型时需要下载约 100MB-200MB 的数据，请确保网络连接稳定
-- 模型数据会被缓存，后续访问速度会更快
+### Phi 系列
+- **Phi-3.5-mini**：微软轻量级模型
+- **Phi-3.5-vision**：支持图像理解的多模态模型
 
-## 故障排除
+### Hermes 系列
+- **Hermes-3-Llama**：通用助手模型
+- **Hermes-2-Pro**：专业版本
 
-如果遇到 `net::ERR_CONNECTION_CLOSED` 错误，请检查：
+## 💻 系统要求
 
-1. 确保网络连接正常，可以访问 CDN
-2. 如果问题持续存在，可以尝试更换 CDN 提供商，在 `app.js` 中修改导入语句：
-   ```javascript
-   // 原始导入方式
-   import * as webllm from "https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.79/+esm";
-   
-   // 备用导入方式
-   import * as webllm from "https://esm.run/@mlc-ai/web-llm";
-   ```
-3. 确保浏览器支持 ES6 模块，检查 `index.html` 中是否有 `type="module"` 属性
-4. 如果是模型加载问题，项目已从 Phi-3 模型切换到更稳定的 Llama-3.2-1B 模型，请确保使用的是最新版本代码
+### 浏览器支持
+- **Chrome 113+** 或 **Edge 113+**
+- **WebGPU 支持**（必需）
+- **推荐配置**：8GB+ 内存，支持 WebGPU 的显卡
 
-## 部署到 GitHub Pages
+### 最低配置
+- **内存**：4GB（使用 1B 模型）
+- **显卡**：支持 WebGPU 的集成显卡
+- **浏览器**：最新版 Chrome/Edge
 
-1. 确保你已经将更改推送到 GitHub 仓库
-2. 运行以下命令部署到 GitHub Pages：
-   ```
-   npm run deploy
-   ```
-3. 在 GitHub 仓库设置中，将 GitHub Pages 源设置为 `gh-pages` 分支
+## 🎯 使用建议
 
-## 使用 GitHub Actions 自动部署
+### 新手推荐
+- **Llama-3.2-1B-Instruct-q4f16_1-MLC**：879MB VRAM，快速启动
 
-本项目包含一个 GitHub Actions 工作流，可以在每次推送到 `main` 分支时自动部署到 GitHub Pages：
+### 日常使用
+- **Llama-3.1-8B-Instruct-q4f16_1-MLC**：5GB VRAM，性能优秀
 
-1. 确保你的仓库已启用 GitHub Pages，并将源设置为 GitHub Actions
-2. 将更改推送到 `main` 分支
-3. GitHub Actions 会自动触发部署工作流
-4. 你可以在仓库的 Actions 选项卡中查看部署状态
+### 专业场景
+- **DeepSeek-R1-Distill-Llama-8B-q4f16_1-MLC**：推理能力强
+- **Hermes-3-Llama-3.1-8B-q4f16_1-MLC**：通用助手
 
-如果遇到 "Branch 'main' is not allowed to deploy to github-pages due to environment protection rules" 错误，请检查以下设置：
+## 📈 性能对比
 
-1. 在 GitHub 仓库设置中，进入 Environments > github-pages
-2. 检查部署保护规则，确保 'main' 分支被允许部署
-3. 如果需要，可以添加 'main' 分支到允许的分支列表中
+| 模型 | VRAM 占用 | 响应速度 | 推理能力 | 推荐场景 |
+|---|---|---|---|---|
+| Llama-3.2-1B | 879MB | 快 | 基础 | 测试/低配置 |
+| Llama-3.2-3B | 2.3GB | 中等 | 良好 | 日常使用 |
+| Llama-3.1-8B | 5GB | 中等 | 优秀 | 生产环境 |
+| DeepSeek-R1 | 5GB | 中等 | 极强 | 复杂推理 |
+
+## 🛠️ 常见问题
+
+### Q: 为什么模型加载失败？
+A: 可能原因：
+- 浏览器不支持 WebGPU（使用 Chrome/Edge 最新版）
+- 网络连接问题（检查网络并重试）
+- 内存不足（选择更小的模型）
+
+### Q: 首次加载为什么这么慢？
+A: 首次使用需要下载模型权重文件（几百 MB 到几 GB），后续会缓存到本地。
+
+### Q: 如何切换模型？
+A: 重新选择模型并点击"加载模型"按钮即可。
+
+### Q: 支持中文吗？
+A: 支持！所有模型都支持中英文对话。
+
+## 🔄 更新日志
+
+### v1.1.0 (当前)
+- ✅ 修复模型标识符错误
+- ✅ 更新为 WebLLM v0.2.79 支持的模型
+- ✅ 添加模型分组和 VRAM 信息显示
+- ✅ 改进错误处理和用户提示
+- ✅ 添加 WebGPU 兼容性检查
+
+### v1.0.0
+- ✅ 初始版本发布
+- ✅ 基础聊天功能
+- ✅ 模型选择界面
