@@ -76,7 +76,13 @@
 
 本项目包含一个 GitHub Actions 工作流，可以在每次推送到 `main` 分支时自动部署到 GitHub Pages：
 
-1. 确保你的仓库已启用 GitHub Pages，并将源设置为 `gh-pages` 分支
+1. 确保你的仓库已启用 GitHub Pages，并将源设置为 GitHub Actions
 2. 将更改推送到 `main` 分支
 3. GitHub Actions 会自动触发部署工作流
 4. 你可以在仓库的 Actions 选项卡中查看部署状态
+
+如果遇到 "Branch 'main' is not allowed to deploy to github-pages due to environment protection rules" 错误，请检查以下设置：
+
+1. 在 GitHub 仓库设置中，进入 Environments > github-pages
+2. 检查部署保护规则，确保 'main' 分支被允许部署
+3. 如果需要，可以添加 'main' 分支到允许的分支列表中
