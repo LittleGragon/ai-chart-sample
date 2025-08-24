@@ -4,16 +4,19 @@
   "description": "",
   "license": "ISC",
   "author": "",
+  "homepage": "https://LittleGragon.github.io/ai-chart-sample",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "http-server -c-1 -p 8000"
-  },
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "http-server -c-1 -p 8000",
+      "deploy": "gh-pages -d ."
+    },
   "dependencies": {
     "@mlc-ai/web-llm": "^0.2.79"
   },
   "devDependencies": {
+    "gh-pages": "^6.3.0",
     "http-server": "^14.1.1"
   }
 }

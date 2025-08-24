@@ -62,3 +62,21 @@
    ```
 3. 确保浏览器支持 ES6 模块，检查 `index.html` 中是否有 `type="module"` 属性
 4. 如果是模型加载问题，项目已从 Phi-3 模型切换到更稳定的 Llama-3.2-1B 模型，请确保使用的是最新版本代码
+
+## 部署到 GitHub Pages
+
+1. 确保你已经将更改推送到 GitHub 仓库
+2. 运行以下命令部署到 GitHub Pages：
+   ```
+   npm run deploy
+   ```
+3. 在 GitHub 仓库设置中，将 GitHub Pages 源设置为 `gh-pages` 分支
+
+## 使用 GitHub Actions 自动部署
+
+本项目包含一个 GitHub Actions 工作流，可以在每次推送到 `main` 分支时自动部署到 GitHub Pages：
+
+1. 确保你的仓库已启用 GitHub Pages，并将源设置为 `gh-pages` 分支
+2. 将更改推送到 `main` 分支
+3. GitHub Actions 会自动触发部署工作流
+4. 你可以在仓库的 Actions 选项卡中查看部署状态
