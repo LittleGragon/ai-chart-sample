@@ -1,6 +1,13 @@
 // Import WebLLM from CDN
 import * as webllm from "https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.79/+esm";
 
+// Import Material Web components (CDN)
+import "https://cdn.jsdelivr.net/npm/@material/web@1.5.1/button/filled-button.js";
+import "https://cdn.jsdelivr.net/npm/@material/web@1.5.1/textfield/outlined-text-field.js";
+import "https://cdn.jsdelivr.net/npm/@material/web@1.5.1/progress/circular-progress.js";
+import "https://cdn.jsdelivr.net/npm/@material/web@1.5.1/icon/icon.js";
+import "https://cdn.jsdelivr.net/npm/@material/web@1.5.1/card/elevated-card.js";
+
 // DOM elements
 const chatContainer = document.getElementById('chat-container');
 const userInput = document.getElementById('user-input');
@@ -8,6 +15,7 @@ const sendButton = document.getElementById('send-button');
 const modelSelection = document.getElementById('model-selection');
 const loadModelButton = document.getElementById('load-model-button');
 const loadingMessage = document.getElementById('loading-message');
+const modelProgress = document.getElementById('model-progress');
 
 // Chat history
 let messages = [
@@ -22,6 +30,7 @@ function initProgressCallback(report) {
   const progress = report.progress ? ` (${(report.progress * 100).toFixed(1)}%)` : '';
   loadingMessage.textContent = `正在加载模型: ${report.text}${progress}`;
   loadingMessage.style.display = 'block';
+  modelProgress.style.display = 'inline-block';
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
@@ -41,6 +50,9 @@ async function loadModel() {
   modelSelection.disabled = true;
   loadModelButton.disabled = true;
   sendButton.disabled = true;
+  modelProgress.style.display = 'inline-block';
+  loadingMessage.style.display = 'block';
+  loadingMessage.textContent = '正在准备加载模型…';
   
   try {
     // Create or reload engine
@@ -53,8 +65,9 @@ async function loadModel() {
       await engine.reload(selectedModel, { initProgressCallback: initProgressCallback });
     }
     
-    // Hide loading message
+    // Hide loading indicators
     loadingMessage.style.display = 'none';
+    modelProgress.style.display = 'none';
     
     // Enable send button
     sendButton.disabled = false;
@@ -65,18 +78,19 @@ async function loadModel() {
     console.error('Failed to load model:', error);
     
     let errorMessage = '模型加载失败';
-    if (error.message.includes('WebGPU')) {
+    if (error.message && error.message.includes('WebGPU')) {
       errorMessage = '❌ 您的浏览器不支持 WebGPU，请使用 Chrome/Edge 最新版本';
-    } else if (error.message.includes('Network')) {
+    } else if (error.message && error.message.includes('Network')) {
       errorMessage = '❌ 网络连接失败，请检查网络后重试';
-    } else if (error.message.includes('memory')) {
+    } else if (error.message && error.message.includes('memory')) {
       errorMessage = '❌ 内存不足，请尝试选择更小的模型';
-    } else {
+    } else if (error.message) {
       errorMessage = `❌ 加载失败：${error.message}`;
     }
     
     loadingMessage.textContent = errorMessage;
     loadingMessage.style.display = 'block';
+    modelProgress.style.display = 'none';
     
     // Enable model selection
     modelSelection.disabled = false;
@@ -108,7 +122,7 @@ function addMessage(role, content) {
 
 // Send message to AI
 async function sendChatMessage() {
-  const message = userInput.value.trim();
+  const message = (userInput.value || '').trim();
   if (!message || !engine) return;
 
   // Add user message to UI
@@ -121,10 +135,10 @@ async function sendChatMessage() {
   messages.push({ role: 'user', content: message });
   
   // Show loading indicator
-  const loadingMessage = document.createElement('div');
-  loadingMessage.className = 'message loading';
-  loadingMessage.textContent = 'AI 正在思考...';
-  chatContainer.appendChild(loadingMessage);
+  const loadingEl = document.createElement('div');
+  loadingEl.className = 'message loading';
+  loadingEl.textContent = 'AI 正在思考...';
+  chatContainer.appendChild(loadingEl);
   chatContainer.scrollTop = chatContainer.scrollHeight;
   
   try {
@@ -134,7 +148,7 @@ async function sendChatMessage() {
     });
     
     // Remove loading message
-    chatContainer.removeChild(loadingMessage);
+    chatContainer.removeChild(loadingEl);
     
     // Add AI response to UI
     const aiMessage = reply.choices[0].message.content;
@@ -144,15 +158,16 @@ async function sendChatMessage() {
     messages.push({ role: 'assistant', content: aiMessage });
   } catch (error) {
     console.error('Failed to generate response:', error);
-    chatContainer.removeChild(loadingMessage);
+    chatContainer.removeChild(loadingEl);
     addMessage('ai', '抱歉，我无法生成回复。请稍后重试。');
   }
 }
 
 // Event listeners
 sendButton.addEventListener('click', sendChatMessage);
-userInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
+userInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
     sendChatMessage();
   }
 });
