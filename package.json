@@ -4,7 +4,7 @@
   "description": "",
   "license": "ISC",
   "author": "",
-  "homepage": "https://LittleGragon.github.io/ai-chart-sample",
+  "homepage": "https://LittleGragon.github.io/ai-chat-sample",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
